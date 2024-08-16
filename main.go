@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"html/template"
 	"log"
 	"net/http"
 	"time"
@@ -32,7 +33,8 @@ func main() {
 }
 
 func rootPage(w http.ResponseWriter, r *http.Request) {
-	views.Base("Go+HTMX+Templ+SQLite").Render(r.Context(), w)
+	tmpl := template.Must(template.ParseFiles("views/base.html"))
+	tmpl.Execute(w, "Go + HTMX + SQLITE + TailwindCSS")
 }
 
 func aboutPage(w http.ResponseWriter, r *http.Request) {
