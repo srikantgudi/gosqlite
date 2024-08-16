@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/srikantgudi/gosqlite/db"
-	"github.com/srikantgudi/gosqlite/views"
+	"gosqlite/db"
+	"gosqlite/models"
 )
 
 func main() {
@@ -18,7 +18,7 @@ func main() {
 	r.HandleFunc("/products", productsPage)
 	r.HandleFunc("/customers", customersPage)
 	r.HandleFunc("/customer/{oid}/orders", ordersPage)
-	http.HandleFunc("/order/{oid}/details", orderDetailsPage)
+	r.HandleFunc("/order/{oid}/details", orderDetailsPage)
 	r.HandleFunc("/about", aboutPage)
 
 	fmt.Println("Running on http://localhost:8090")
@@ -39,35 +39,48 @@ func rootPage(w http.ResponseWriter, r *http.Request) {
 
 func aboutPage(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("about page...")
-	views.About().Render(r.Context(), w)
+	tmpl := template.Must(template.ParseFiles("views/about.html"))
+	tmpl.Execute(w, nil)
 }
 
 func productsPage(w http.ResponseWriter, r *http.Request) {
 	data := db.GetProducts()
-	views.Products(data).Render(r.Context(), w)
+	tmpl := template.Must(template.ParseFiles("views/products.html"))
+	tmpl.Execute(w, data)
 }
 
 func customersPage(w http.ResponseWriter, r *http.Request) {
 	customers := db.GetCustomers()
-	views.Customers(customers).Render(r.Context(), w)
+	tmpl := template.Must(template.ParseFiles("views/customers.html"))
+	tmpl.Execute(w, customers)
 }
 
 func ordersPage(w http.ResponseWriter, r *http.Request) {
 	custid := r.PathValue("oid")
 	data := db.GetOrders(custid)
-	views.Orders(data).Render(r.Context(), w)
+	fmt.Println("orders page:", data)
+	tmpl := template.Must(template.ParseFiles("views/orders.html"))
+	tmpl.Execute(w, data)
 }
 func orderDetailsPage(w http.ResponseWriter, r *http.Request) {
 	orderid := r.PathValue("oid")
+	fmt.Println("order-id:", orderid)
 	data, err := db.GetOrderdetails(orderid)
 	if err != nil {
-		log.Fatal(err.Error())
+		log.Fatalln("error fetching details:", err.Error())
 	}
-	fmt.Println("order details:", data)
+	fmt.Printf("order details: %#v", data)
 	orderTotal := 0.0
 	for _, o := range data {
-		orderTotal += o.UnitPrice * o.Quantity
+		orderTotal += o.LineTotal
 	}
 	order, _ := db.GetOrder(orderid)
-	views.Orderdetails(data, orderTotal, order).Render(r.Context(), w)
+	fmt.Println("order-details-page: order = ", order)
+	tmpl := template.Must(template.ParseFiles("views/orderdetails.html"))
+	type detail struct {
+		Data  []models.Orderdetail
+		Total float64
+	}
+	dtl := detail{Data: data, Total: orderTotal}
+	tmpl.Execute(w, dtl)
 }

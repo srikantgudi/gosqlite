@@ -1,11 +1,8 @@
 <div>
   <div class="text-2xl text-blue-500 my-4">Order details</div>
-  <div class="font-medium-bold text-teal-500">
-    Order # {fmt.Sprintf("%v", order.Id)} | Date: {order.OrderDate}
-  </div>
   <div>
     <table class="w-full">
-      <thead>
+      <thead class="bg-gray-600 text-white sticky top-0">
         <tr>
           <td width="40%">Product Name</td>
           <td align="right">Quantity</td>
@@ -14,14 +11,14 @@
         </tr>
       </thead>
       <tbody>
-        for _, orderDetail := range data {
+        {{range .Data}}
           <tr>
             <td>{{.ProductName}}</td>
-            <td align="right">{{printf "%.2f".Quantity}}</td>
+            <td align="right">{{printf "%d" .Quantity}}</td>
             <td align="right">{{printf "%.2f" .UnitPrice}}</td>
-            <td align="right">{{printf "%.2f" .Quantity * .UnitPrice}}</td>
+            <td align="right">{{printf "%.2f" .LineTotal}}</td>
           </tr>
-        }
+        {{end}}
       </tbody>
       <tfoot class="bg-gray-300">
         <tr>
@@ -29,7 +26,7 @@
             Total:
           </td>
           <td align="right">
-            {{printf "%.2f" total}}
+            {{printf "%.2f" .Total}}
           </td>
         </tr>
       </tfoot>

@@ -27,8 +27,8 @@ type CustomerOrders struct {
 }
 
 type Orderdetail struct {
-	Id          string  `db:"id"`
-	ProductName string  `db:"productname"`
+	ProductName string  `db:"product_name"`
 	UnitPrice   float64 `db:"unitprice"`
-	Quantity    float64 `db:"quantity"`
+	Quantity    int     `db:"quantity"`
+	LineTotal   float64 `db:"linetotal"`
 }

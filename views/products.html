@@ -1,6 +1,6 @@
 <div>
   <div class="text-2xl">Products</div>
-  <div>{fmt.Sprintf("%d rows fetched",len(data))}</div>
+  <div>{{len .}} products fetched</div>
   <div class="h-[70vh] overflow-y-auto">
     <table width="auto">
       <thead class="sticky top-0 bg-gray-500 text-white">
@@ -12,16 +12,15 @@
         </tr>
       </thead>
       <tbody>
-        for _, p := range data {
+        {{range .}}
           <tr class="even:bg-gray-200">
-            <td>{p.ProductName}</td>
-            <td>{fmt.Sprintf("%s",p.QuantityPerUnit)}</td>
-            <td align="right">{fmt.Sprintf("%.2f", p.UnitPrice)}</td>
-            <td align="right">{fmt.Sprintf("%d",p.ReorderLevel)}</td>
+            <td>{{.ProductName}}</td>
+            <td>{{.QuantityPerUnit}}</td>
+            <td align="right">{{printf "%.2f" .UnitPrice}}</td>
+            <td align="right">{{printf "%d" .ReorderLevel}}</td>
           </tr>
-        }
+        {{end}}
       </tbody>
     </table>
   </div>
 </div>
-}

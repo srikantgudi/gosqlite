@@ -1,16 +1,15 @@
-<div>
-  <div>Company: <span class="font-bold text-blue-600">{{custOrders.Cust.CompanyName}}</span>, {{custOrders.Cust.City}}</div>
-  <div class="flex gap-1 flex-wrap">
-    {{range .custOrders.Orders}}
-      <button class="p-1 bg-gray-300 rounded-md"
-        hx-get="/order/{{order.Id}}/details",
-        hx-target="#details"
-        >
-        {{.Id}} | {{.OrderDate}}
-      </button>
-    {{end}}
+<div class="grid grid-cols-12 gap-2">
+  <div class="col-span-4">
+    <div class="text-2xl text-blue-500 my-4">Orders</div>
+    <div>Company: <span class="font-bold text-blue-600">{{.Cust.CompanyName}}</span>, {{.Cust.City}}</div>
+    <div class="flex gap-1 flex-col w-full">
+      {{range .Orders}}
+        <button class="p-1 bg-gray-300 rounded-md" title="/order/{{.Id}}/details"
+          hx-get="/order/{{.Id}}/details" hx-target="#details">
+          {{.Id}} | {{.OrderDate}}
+        </button>
+      {{end}}
+    </div>
   </div>
-  <div>
-    
-  </div>
+  <div class="col-span-8" id="details"> -- details --</div>
 </div>

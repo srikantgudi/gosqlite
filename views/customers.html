@@ -4,7 +4,7 @@
       <div class="text-2xl">Customers</div>
       <div style="height:70vh;overflow-y:auto">
         <table>
-          <thead>
+          <thead class="sticky top-0 bg-gray-600 text-white">
             <tr>
               <td>Company</td>
               <td>City</td>
@@ -12,7 +12,7 @@
             </tr>
           </thead>
           <tbody>
-            {{range .data}}
+            {{range .}}
               <tr class="h-8 even:bg-gray-300 hover:text-blue-700 cursor-pointer"                  
                 hx-get="/customer/{{.Id}}/orders"
                 hx-target="#orders">
@@ -26,9 +26,7 @@
       </div>
     </div>
     <div class="col-span-8">
-      <div class="text-2xl">Orders</div>
       <div id="orders"></div>
-      <div id="details"></div>
     </div>
   </div>
 </div>

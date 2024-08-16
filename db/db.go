@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/srikantgudi/gosqlite/models"
+	"gosqlite/models"
 
 	// _ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
@@ -17,7 +17,7 @@ var sqlProd string = "Select id, product_name, quantity_per_unit, unit_price, re
 var sqlCustomers string = "SELECT c.id, c.company_name, c.city, COUNT(c.id) AS ocount FROM Customers c LEFT JOIN Orders o ON c.id=o.customer_id GROUP BY c.id HAVING ocount > 0"
 var sqlCust string = "SELECT c.id, c.company_name, c.city FROM Customers c"
 var sqlOrders string = "Select id, order_date orderdate, shipped_date shipdate from Orders"
-var odetailsForOrderSql = "Select p.product_name productname, od.quantity, od.unitprice From OrderDetails od Join products p on p.id = od.product_id Where od.order_id = ?"
+var odetailsForOrderSql = "Select p.product_name, od.quantity, od.unitprice, round(od.quantity * od.unitprice) linetotal From OrderDetails od Join products p on p.id = od.product_id Where od.order_id = ?"
 
 func init() {
 	// db = sqlx.MustConnect("mysql", "root:nimdaroot@tcp(localhost:3306)/northwind")
@@ -73,7 +73,7 @@ func GetOrder(orderid string) (models.Order, error) {
 
 func GetOrderdetails(orderid string) ([]models.Orderdetail, error) {
 	data := []models.Orderdetail{}
-	fmt.Println("details sql: ", odetailsForOrderSql)
+	fmt.Println("odetailsForOrderSql: ", odetailsForOrderSql, " | order-id:", orderid)
 	err := db.Select(&data, odetailsForOrderSql, orderid)
 	fmt.Println("data:", data, "Err: ", err)
 	return data, err
