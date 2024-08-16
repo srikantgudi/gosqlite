@@ -31,5 +31,4 @@ type Orderdetail struct {
 	ProductName string  `db:"productname"`
 	UnitPrice   float64 `db:"unitprice"`
 	Quantity    float64 `db:"quantity"`
-	LineTotal   float64 `db:"linetotal"`
 }

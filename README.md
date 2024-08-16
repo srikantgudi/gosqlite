@@ -1,1 +1,1 @@
-# gosqlitetempl
+# gosqlite

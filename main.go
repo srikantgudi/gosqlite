@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 
-	"github.com/srikantgudi/gosqlitetempl/db"
-	"github.com/srikantgudi/gosqlitetempl/views"
+	"github.com/srikantgudi/gosqlite/db"
+	"github.com/srikantgudi/gosqlite/views"
 )
 
 func main() {
@@ -15,6 +16,8 @@ func main() {
 	r.HandleFunc("/", rootPage)
 	r.HandleFunc("/products", productsPage)
 	r.HandleFunc("/customers", customersPage)
+	r.HandleFunc("/customer/{oid}/orders", ordersPage)
+	http.HandleFunc("/order/{oid}/details", orderDetailsPage)
 	r.HandleFunc("/about", aboutPage)
 
 	fmt.Println("Running on http://localhost:8090")
@@ -45,4 +48,24 @@ func productsPage(w http.ResponseWriter, r *http.Request) {
 func customersPage(w http.ResponseWriter, r *http.Request) {
 	customers := db.GetCustomers()
 	views.Customers(customers).Render(r.Context(), w)
+}
+
+func ordersPage(w http.ResponseWriter, r *http.Request) {
+	custid := r.PathValue("oid")
+	data := db.GetOrders(custid)
+	views.Orders(data).Render(r.Context(), w)
+}
+func orderDetailsPage(w http.ResponseWriter, r *http.Request) {
+	orderid := r.PathValue("oid")
+	data, err := db.GetOrderdetails(orderid)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+	fmt.Println("order details:", data)
+	orderTotal := 0.0
+	for _, o := range data {
+		orderTotal += o.UnitPrice * o.Quantity
+	}
+	order, _ := db.GetOrder(orderid)
+	views.Orderdetails(data, orderTotal, order).Render(r.Context(), w)
 }

@@ -2,7 +2,7 @@ package views
 
 import (
   "fmt"
-  "github.com/srikantgudi/gosqlitetempl/models"
+  "github.com/srikantgudi/gosqlite/models"
 )
 templ Customers(data []models.Customer) {
   <div>
@@ -34,8 +34,8 @@ templ Customers(data []models.Customer) {
       </div>
       <div class="col-span-8">
         <div class="text-2xl">Orders</div>
-        <div id="orders">
-        </div>
+        <div id="orders"></div>
+        <div id="details"></div>
       </div>
     </div>
   </div>

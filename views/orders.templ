@@ -1,0 +1,25 @@
+package views
+
+import (
+  "fmt"
+  "github.com/srikantgudi/gosqlite/models"
+)
+
+templ Orders(custOrders models.CustomerOrders) {
+  <div>
+    <div>Company: <span class="font-bold text-blue-600">{custOrders.Cust.CompanyName}</span>, {custOrders.Cust.City}</div>
+    <div class="flex gap-1 flex-wrap">
+      for _, order := range custOrders.Orders {
+        <button class="p-1 bg-gray-300 rounded-md"
+          hx-get={string(templ.URL(fmt.Sprintf("/order/%v/details",order.Id)))}
+          hx-target="#details"
+          >
+          {fmt.Sprintf("%v",order.Id)} | {order.OrderDate}
+        </button>
+      }
+    </div>
+    <div>
+      
+    </div>
+  </div>
+}
